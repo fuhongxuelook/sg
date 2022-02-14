@@ -1,0 +1,311 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    
+}
+body,*{
+    margin: 0;
+	padding: 0;
+}
+/* 电脑端的样式 */
+.container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* background-color: #222222; */
+    background-color: yellowgreen;
+}
+
+.company-menu{
+    flex: 1;
+    /* height: 100%; */
+    /* background-color: #222222; */
+    /* box-shadow: 2px 0 3px -1px #1a1a1a; */
+    box-shadow: 2px 0 3px -1px red;
+    background-color: gray;
+    
+}
+
+/* 公司信息的样式 */
+.company-info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid #303030;
+    width: 100%;
+    height: 76px;
+}
+
+.company-logo{
+    width: 46px;
+    height: 45px;
+    margin-right: 54px;
+} 
+
+.company-name{
+    color: white;
+    width: 35%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    line-height: 45px;
+}
+
+
+
+/* 菜单的样式 */
+.menu{
+    width: 100%;
+}
+
+
+ul{
+    list-style-type: none;
+    margin-top: 48px;
+    text-align: center;
+    display:flex;
+    justify-content:center;
+    align-content:center;
+    flex-direction: column;
+    align-items: center;
+}
+ul li{
+    text-align: left;
+    width: 236px;
+    height: 53px;
+    font-size: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    /* background-color: yellow; */
+}
+
+ul li div{
+    width: 200px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+
+ul li div p{
+    margin-left: 16px;
+    
+}
+
+
+/* 菜单被选中的样式 */
+ul li:hover{
+    border-radius: 5px;
+    border: solid 1px #00a9c8;
+    color: #02dbee;
+}
+
+
+.item-selected{
+    display: none;
+}
+
+
+/* 各种类的样式 */
+.white-line{
+    width: 100%;
+    height: 76px;
+    border-bottom: 1px solid #303030;
+}
+.item{
+    flex: 2;
+    /* background-color: #222222; */
+    background-color: #9078d0;
+}
+
+.item-name{
+    font-family: SimHei;
+    font-size: 26px;
+    color: #21b3d5;
+    margin-top: 58px;
+    margin-bottom: 25px;
+    margin-left: 92px;
+}
+.item-content-container{
+    width:70%;
+    background-color: #272727;
+    margin-left: 64px;
+    padding-bottom: 50px;
+}
+.item-content:nth-child(1){
+    /* padding-top: 75px; */
+    font-size: 22px;
+	color: #666666;
+}
+
+.item-interval{
+    color: #21b3d5;
+    font-size: 32px;
+}
+.item-content{
+    width: 60%;
+    max-width: 254px;
+    margin-left:52px;
+    margin-bottom: 25px;
+    /* background-color: yellow; */
+}
+
+
+.item-content-name{
+    font-family: SimHei;
+	font-size: 19px;
+	color: #9078d0;
+
+}
+.item-content-value{
+    font-family: SimHei;
+	font-size: 15px;
+	color: #666666;
+    margin-top: 3px;
+}
+
+/* 手机端的样式 */
+@media screen and (max-width: 640px) {
+    body{
+        background-color: #222222
+    }
+    .container{
+        display: block;
+        width: 92%;
+        margin-left: 15px;
+    }
+    .company-info{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-bottom: 1px solid #303030;
+        width: 100%;
+        height: 76px;
+        margin-bottom: 19px;
+    }
+    .company-logo {
+        width: 23px;
+        height: 23px;
+        margin-right: 5px;
+    }
+    .company-name {
+        width: 85px;
+        height: 14px;
+    }
+    .company-menu{
+        width: 100%; 
+        /* height: 100%; */
+        background-color: #222222;
+        box-shadow: 0px 0px 0px 0px #222222;
+    }
+    ul{
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        list-style-type: none;
+        /* background-color: red; */
+        margin-top: 0;
+    }
+    ul li{
+        width: 90px;
+        height: 72px;
+        background-color: #333333;
+        border-radius: 5px;
+        border: solid 1px #ffffff;
+        border-color: rgba(255,255,255,0.4);
+        font-size: 10px;
+    }
+    ul li:nth-child(2){
+        margin-right: 34px;
+        margin-left: 34px;
+    }
+    ul li:nth-child(5){
+        margin-right: 34px;
+        margin-left: 34px;
+    }
+    /* ul li:nth-of-type(2){
+        margin-right: 22px;
+    }
+    ul li:nth-of-type(1){
+        margin-left: 22px;
+    } */
+
+    ul li div{
+        /* background-color: yellow; */
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+    }
+    ul li div p{
+        margin-left: 0px;
+        font-size: 0.63rem;
+        width: 160px;
+        text-align: center;
+        font-size: 16px;
+        -webkit-transform: scale(0.5);
+    }
+    ul li div img{
+        width: 27px;
+	    height: 25px;
+    }
+    .white-line {
+        display: none;
+    }
+    .item{
+        width: 100%;
+        background-color: #222222;
+    }
+
+    .item-name {
+        width: 100%;
+        font-family: SimHei;
+        font-size: 26px;
+        color: #21b3d5;
+        margin-top: 10px;
+        margin-bottom: 25px;
+        margin-left: 0px;
+        /* background-color: #9078d0; */
+    }
+    .item-content-container {
+        width: 100%;
+        margin-left: 0px;
+        padding-bottom: 0px;
+    }
+    p.item-content {
+        padding-top: 0px;
+        font-size: 16px;
+        color: #666666;
+    }
+    .item-interval{
+        font-size: 24px;
+    }
+    .item-content {
+        width: 100%;
+        margin-left: 0px;
+        margin-bottom: 33px;
+        /* background-color: yellow; */
+    }
+    .item-content-name{   
+        font-size: 16px;
+    }
+    .item-content-value{  
+        font-size: 13px;
+        margin-top: 10px;
+    }
+    .item-content-container{
+        width: 100%;
+        background-color: #222222;
+    }
+
+}

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv = "X-UA-Compatible" content = "IE=edge,chrome=1">
+    <title>SKP Claim</title>
+    <!-- <link rel="stylesheet" type="text/css" href="web.css" /> -->
+    <link href="web-1.css" rel="stylesheet" type="text/css" >
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+</head>
+        
+<body>
+    <div class="container">
+        <!-- 左边的菜单栏 -->
+        <div class="company-menu">
+            <div class="company-info">
+                <img  class="company-logo" src="imgs/companyLogo.png"/>
+                <img  class="company-name" src="imgs/companyName.png"/>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li id="connect-wallet">
+                        <div>
+                            <img src="imgs/wallet-1.png">
+                            <img class="item-selected" src="imgs/wallet-1-selected.png">
+                            <p>CONNECT WALLET</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <span id="say"></span>
+                        </div>
+                    </li>
+                    <li id="redeem-skp">
+                        <div>
+                            <img src="imgs/redeem.png">
+                            <img class="item-selected" src="imgs/redeem-selected.png">
+                            <p>REDEEM SKP</p>
+                        </div>
+                    </li>
+                    <li id="withdraw-shib">
+                        <div>
+                            <img src="imgs/wallet-2.png">
+                            <img class="item-selected" src="imgs/wallet-2-selected.png">
+                            <p>WITHDRAW SHIB</p>
+                        </div>
+                    </li>
+                    <li id="info">
+                        <div>
+                            <img src="imgs/info.png">
+                            <img class="item-selected" src="imgs/Info-selected.png">
+                            <p>INFO</p>
+                        </div>
+                        
+                    </li>
+                    <li id="refresh">
+                        <div>
+                            <img src="imgs/refresh.png">
+                            <img class="item-selected" src="imgs/refresh-selected.png">
+                            <p>REFRESH</p>
+                        </div>
+                    </li>      
+                        <!--保证手机端的第五个方块对齐第一行的第二个 -->
+                    <li id="virtual-box">
+                        <div></div>
+                    </li>             
+                </ul>
+            </div>
+        </div>
+        <!-- 右边的显示栏 -->
+        <div class="item">
+            <div class="white-line"></div>
+            <p class="item-name">Info</p>
+            <div class="item-content-container">
+                <div class="item-content">
+                    epoch<br>
+                    Each redeem interval is <span class="item-interval">30 days</span><br>
+                    Time was calculated at last Redeem
+                </div>
+                <div class="item-content">
+                    <p class="item-content-name">BALANCE : </p>
+                    <p id="bal" class="item-content-value"></p>
+                </div>
+                <div class="item-content">
+                    <p class="item-content-name">NEXT REDEEM DATE :</p>
+                    <p id="nextRedeemDate" class="item-content-value"></p>
+                </div>
+
+                <div class="item-content">
+                    <p class="item-content-name">WITHDRAWABLE SHIB BALANCE : </p>
+                    <p id="withDrawable" class="item-content-value"></p>
+                </div>
+                <div class="item-content">
+                    <p class="item-content-name">LEFT REDEEM TIMES : </p>
+                    <p id="leftRedeemTimes" class="item-content-value"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>  
+</body>
+
+<script>
+
+    let abi = [
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "withdrawableDividendOf",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "balanceOf",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "nextRedeemDate",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "redeemTimes",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "handleCalculate",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ]
+
+    let signer;
+
+    let Contract = '0xe7e17e7EA7dA29d2F10942700a7D7Ee73488A547';
+
+    function showResult(node, msg) {
+        node.text(msg);
+    }
+
+    jQuery("#connect-wallet").click(async function () {
+        await window.ethereum.enable()
+        if (typeof window.ethereum == 'undefined') {
+            alert('MetaMask is not installed!');
+        } else {
+            if (window.ethereum.chainId != "0x38") { //MUMBAI 0x13881 BSC 0x38
+                showResult(jQuery("#connect-wallet"), "Connect wallet");
+                showResult(jQuery("#say") ,"Wrong network, please switch to BSC network")
+                return;
+            }
+        }
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+        // The MetaMask plugin also allows signing transactions to
+        // send ether and pay to change state within the blockchain.
+        // For this, you need the account signer...
+        signer = provider.getSigner();
+        myAddress = await signer.getAddress();
+        showResult(jQuery("#connect-wallet"), myAddress);
+        showResult(jQuery("#say"), "");
+
+    });
+
+    jQuery("#redeem-skp").click(async function () {
+        redeem();
+    });
+
+    jQuery("#withdraw-shib").click(async function () {
+        withdraw();
+
+    });
+
+    jQuery("#info").click(async function () {
+        info();
+
+    });
+    
+    jQuery("#refresh").click(async function () {
+        refresh();
+
+    });
+
+
+
+    async function redeem() {
+
+        let funcCode = ethers.utils.hexDataSlice(ethers.utils.id("redeemSKP()"), 0, 4);
+
+        let data = ethers.utils.hexConcat([
+            funcCode
+        ]);
+        let t = {//签名，发送交易
+            to: Contract,//发送至以太坊域名
+            data: data
+        }
+
+
+        const tx0 = await signer.sendTransaction(t);
+
+        await tx0.wait();
+
+        console.log(tx0);
+
+    }
+
+    async function withdraw() {
+       
+        let funcCode = ethers.utils.hexDataSlice(ethers.utils.id("claimShibReward()"), 0, 4);
+
+        let data = ethers.utils.hexConcat([
+            funcCode
+        ]);
+        let t = {//签名，发送交易
+            to: Contract,//发送至以太坊域名
+            data: data
+        }
+
+
+        const tx0 = await signer.sendTransaction(t);
+
+        await tx0.wait();
+
+        console.log(tx0);
+
+    }
+
+    async function refresh() {
+       
+        let funcCode = ethers.utils.hexDataSlice(ethers.utils.id("handleCalculate()"), 0, 4);
+
+        let data = ethers.utils.hexConcat([
+            funcCode
+        ]);
+        let t = {//签名，发送交易
+            to: Contract,//发送至以太坊域名
+            data: data
+        }
+
+
+        const tx0 = await signer.sendTransaction(t);
+
+        await tx0.wait();
+
+    }
+
+    
+
+    async function info() {
+        let myAddress = await signer.getAddress();
+        let provider = new ethers.providers.Web3Provider(window.ethereum);
+        let vaultContract = new ethers.Contract(Contract, abi, provider);
+
+        let withdrawableDividend = await vaultContract.withdrawableDividendOf(myAddress);
+
+        let nextRedeemDate = await vaultContract.nextRedeemDate(myAddress);
+
+        let balance = await vaultContract.balanceOf(myAddress);
+
+
+
+        let redeemTime = await vaultContract.redeemTimes(myAddress);
+
+        balance = (balance/1e9).toFixed(2);
+        showResult(jQuery("#bal"), balance);
+
+        showResult(jQuery("#nextRedeemDate"), timestampConvert(nextRedeemDate.toNumber()));
+        
+        withdrawableDividend = (withdrawableDividend/ 1e18).toFixed(2);
+        showResult(jQuery("#withDrawable"), withdrawableDividend);
+        showResult(jQuery("#leftRedeemTimes"),18 - redeemTime);
+        
+        
+        // let myAddress = await signer.getAddress();
+        // let funcCode = ethers.utils.hexDataSlice(
+        //     ethers.utils.id("withdrawableDividendOf(address)"), 
+        //     0, 
+        //     4
+        // );
+
+        // let data = ethers.utils.hexConcat([
+        //     funcCode,
+        //     ethers.utils.hexZeroPad(myAddress, 32),
+        // ]);
+        // let t = {//签名，发送交易
+        //     to: Contract,//发送至以太坊域名
+        //     data: data
+        // }
+
+
+        // const tx0 = await signer.sendTransaction(t);
+
+        // await tx0.wait();
+
+        // console.log(tx0);
+
+    }
+
+    function timestampConvert(tm) {
+        if(tm == 0) {
+            return "NaN";
+        }
+        var sd = new Date(tm * 1000).toLocaleDateString("en-US")
+        var st = new Date(tm * 1000).toLocaleTimeString("en-US")
+        return sd + " - " + st;
+    }
+
+
+
+
+</script>
+
+
+</html>
